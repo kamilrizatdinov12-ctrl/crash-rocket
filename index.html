@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Краш Ракета</title>
+    <title>Краш Ракета PRO</title>
     <script src="https://telegram.org"></script>
     <style>
         body {
@@ -26,30 +26,60 @@
             border-radius: 20px;
             padding: 20px;
             text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         #screen {
-            height: 200px;
+            height: 220px;
             background: #090d13;
             border-radius: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
         #multiplier {
             font-size: 3rem;
             font-weight: bold;
             color: #58a6ff;
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
         #rocket {
             font-size: 3rem;
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            transition: transform 0.1s linear;
+            z-index: 5;
+            transform-origin: center;
             display: none;
+            cursor: default;
+            user-select: none;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        #bet-input {
+            width: 100px;
+            padding: 8px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
         }
         .btn {
             background: #238636;
@@ -63,72 +93,168 @@
             width: 100%;
         }
         .btn.cashout { background: #da3633; }
-        #balance-container { margin-bottom: 15px; font-size: 1.1rem; }
+        .btn:disabled { background: #21262d; color: #8b949e; }
+        #balance-container { margin-bottom: 15px; font-size: 1.2rem; color: #cae8ff; }
     </style>
 </head>
 <body>
 <div id="game-container">
     <div id="balance-container">Баланс: <span id="balance">1000</span> 🌟</div>
+    
     <div id="screen">
         <div id="multiplier">1.00x</div>
+        <canvas id="game-canvas"></canvas>
         <div id="rocket">🚀</div>
     </div>
-    <button id="action-btn" class="btn">ВЗЛЕТЕТЬ (Ставка: 10 🌟)</button>
+
+    <div class="input-group">
+        <label for="bet-input">Ставка:</label>
+        <input type="number" id="bet-input" value="10" min="1">
+    </div>
+
+    <button id="action-btn" class="btn">ВЗЛЕТЕТЬ</button>
 </div>
+
 <script>
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
+    
     let balance = 1000;
     let multiplier = 1.00;
     let gameInterval = null;
     let isPlaying = false;
     let hasCashout = false;
     let crashPoint = 0;
+    let currentBet = 10;
+    let trajectoryLog = [];
+
     const balanceEl = document.getElementById('balance');
     const multiplierEl = document.getElementById('multiplier');
     const rocketEl = document.getElementById('rocket');
     const actionBtn = document.getElementById('action-btn');
+    const betInput = document.getElementById('bet-input');
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+    }
+    resizeCanvas();
+
+    function drawChart() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (trajectoryLog.length < 2) return;
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#58a6ff';
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = '#58a6ff';
+
+        ctx.moveTo(trajectoryLog[0].x, trajectoryLog[0].y);
+        for (let i = 1; i < trajectoryLog.length; i++) {
+            ctx.lineTo(trajectoryLog[i].x, trajectoryLog[i].y);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+    }
+
     function startGame() {
-        if (balance < 10) return;
+        currentBet = parseInt(betInput.value);
+        if (isNaN(currentBet) || currentBet <= 0 || balance < currentBet) {
+            alert("Проверьте ставку и баланс!");
+            return;
+        }
+
         isPlaying = true;
         hasCashout = false;
         multiplier = 1.00;
-        balance -= 10;
+        trajectoryLog = [];
+        
+        balance -= currentBet;
         balanceEl.textContent = balance;
-        crashPoint = parseFloat((1.01 + Math.random() * 4).toFixed(2));
+        betInput.disabled = true;
+
+        crashPoint = parseFloat((1.10 + Math.random() * 3.4).toFixed(2));
+        
         actionBtn.textContent = "ЗАБРАТЬ";
         actionBtn.classList.add('cashout');
+        multiplierEl.style.color = "#58a6ff";
+        
+        rocketEl.textContent = "🚀";
         rocketEl.style.display = "block";
+        
+        let startX = 20;
+        let startY = canvas.height - 50;
+        rocketEl.style.left = startX + "px";
+        rocketEl.style.top = startY + "px";
+        rocketEl.style.transform = "rotate(45deg)";
+        trajectoryLog.push({x: startX + 20, y: startY + 20});
+
         gameInterval = setInterval(() => {
-            multiplier += 0.03;
+            multiplier += 0.01;
             multiplierEl.textContent = multiplier.toFixed(2) + "x";
-            let progress = (multiplier - 1) * 40;
-            rocketEl.style.transform = `translate(${progress}px, -${progress}px) rotate(45deg)`;
+
+            let progress = (multiplier - 1);
+            let currentX = startX + progress * 80;
+            let currentY = startY - Math.pow(progress * 10, 1.4) * 4;
+
+            if (currentX > canvas.width - 50) currentX = canvas.width - 50;
+            if (currentY < 40) currentY = 40;
+
+            rocketEl.style.left = currentX + "px";
+            rocketEl.style.top = currentY + "px";
+
+            trajectoryLog.push({x: currentX + 20, y: currentY + 20});
+            drawChart();
+
             if (multiplier >= crashPoint) { endGame(); }
-        }, 100);
+        }, 60);
     }
+
     function cashOut() {
         if (!isPlaying || hasCashout) return;
         hasCashout = true;
-        let winAmount = Math.floor(10 * multiplier);
+        
+        // Звезды теперь рассчитываются честно: вся сумма ставки умножается на Х
+        let winAmount = Math.floor(currentBet * multiplier);
         balance += winAmount;
         balanceEl.textContent = balance;
+        
+        multiplierEl.style.color = "#238636";
         actionBtn.textContent = `Выиграно: ${winAmount} 🌟`;
+        actionBtn.disabled = true;
     }
+
     function endGame() {
         clearInterval(gameInterval);
         isPlaying = false;
+        betInput.disabled = false;
+
         if (!hasCashout) {
+            rocketEl.textContent = "💥";
+            rocketEl.style.transform = "scale(1.5)";
+            multiplierEl.style.color = "#da3633";
             multiplierEl.textContent = "CRASH!";
-            rocketEl.style.display = "none";
         }
+
         setTimeout(() => {
-            actionBtn.textContent = "ВЗЛЕТЕТЬ (Ставка: 10 🌟)";
-            actionBtn.classList.remove('cashout');
+            actionBtn.textContent = "ВЗЛЕТЕТЬ";
+            actionBtn.classList.remove('crashout');
+            actionBtn.disabled = false;
+            multiplierEl.style.color = "#58a6ff";
             multiplierEl.textContent = "1.00x";
-        }, 2000);
+            rocketEl.style.display = "none";
+            rocketEl.style.transform = "rotate(45deg) scale(1)";
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }, 2500);
     }
+
     actionBtn.addEventListener('click', () => { if (!isPlaying) { startGame(); } else { cashOut(); } });
+    window.addEventListener('resize', resizeCanvas);
 </script>
 </body>
 </html>
