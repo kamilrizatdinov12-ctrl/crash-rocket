@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Краш Ракета</title>
+    <script src="https://telegram.org"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0d1117;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #game-container {
+            width: 90%;
+            max-width: 400px;
+            background: #161b22;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        #screen {
+            height: 200px;
+            background: #090d13;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #multiplier {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #58a6ff;
+        }
+        #rocket {
+            font-size: 3rem;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            transition: transform 0.1s linear;
+            display: none;
+        }
+        .btn {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn.cashout { background: #da3633; }
+        #balance-container { margin-bottom: 15px; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+<div id="game-container">
+    <div id="balance-container">Баланс: <span id="balance">1000</span> 🌟</div>
+    <div id="screen">
+        <div id="multiplier">1.00x</div>
+        <div id="rocket">🚀</div>
+    </div>
+    <button id="action-btn" class="btn">ВЗЛЕТЕТЬ (Ставка: 10 🌟)</button>
+</div>
+<script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) { tg.ready(); tg.expand(); }
+    let balance = 1000;
+    let multiplier = 1.00;
+    let gameInterval = null;
+    let isPlaying = false;
+    let hasCashout = false;
+    let crashPoint = 0;
+    const balanceEl = document.getElementById('balance');
+    const multiplierEl = document.getElementById('multiplier');
+    const rocketEl = document.getElementById('rocket');
+    const actionBtn = document.getElementById('action-btn');
+    function startGame() {
+        if (balance < 10) return;
+        isPlaying = true;
+        hasCashout = false;
+        multiplier = 1.00;
+        balance -= 10;
+        balanceEl.textContent = balance;
+        crashPoint = parseFloat((1.01 + Math.random() * 4).toFixed(2));
+        actionBtn.textContent = "ЗАБРАТЬ";
+        actionBtn.classList.add('cashout');
+        rocketEl.style.display = "block";
+        gameInterval = setInterval(() => {
+            multiplier += 0.03;
+            multiplierEl.textContent = multiplier.toFixed(2) + "x";
+            let progress = (multiplier - 1) * 40;
+            rocketEl.style.transform = `translate(${progress}px, -${progress}px) rotate(45deg)`;
+            if (multiplier >= crashPoint) { endGame(); }
+        }, 100);
+    }
+    function cashOut() {
+        if (!isPlaying || hasCashout) return;
+        hasCashout = true;
+        let winAmount = Math.floor(10 * multiplier);
+        balance += winAmount;
+        balanceEl.textContent = balance;
+        actionBtn.textContent = `Выиграно: ${winAmount} 🌟`;
+    }
+    function endGame() {
+        clearInterval(gameInterval);
+        isPlaying = false;
+        if (!hasCashout) {
+            multiplierEl.textContent = "CRASH!";
+            rocketEl.style.display = "none";
+        }
+        setTimeout(() => {
+            actionBtn.textContent = "ВЗЛЕТЕТЬ (Ставка: 10 🌟)";
+            actionBtn.classList.remove('cashout');
+            multiplierEl.textContent = "1.00x";
+        }, 2000);
+    }
+    actionBtn.addEventListener('click', () => { if (!isPlaying) { startGame(); } else { cashOut(); } });
+</script>
+</body>
+</html>
