@@ -3,160 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ GALAXY STARS CASINO ⚡</title>
+    <title>⚡ GALAXY STARS MULTIPLAYER ⚡</title>
     <script src="https://telegram.org"></script>
     <style>
         :root {
-            --bg-main: #0a0e17;
-            --bg-card: #131a26;
-            --bg-input: #1c2636;
+            --bg-main: #060913;
+            --bg-card: #0f1524;
+            --bg-input: #172033;
             --tg-star: #fbc02d;
-            --accent-blue: #00e5ff;
-            --accent-purple: #b200ff;
-            --accent-gold: #ff9100;
-            --accent-green: #00e676;
-            --accent-red: #ff1744;
+            --accent-blue: #00f0ff;
+            --accent-purple: #cc00ff;
+            --accent-gold: #ffaa00;
+            --accent-green: #00ff66;
+            --accent-red: #ff0055;
         }
         body {
-            margin: 0; padding: 0;
-            background: var(--bg-main);
-            color: #ffffff;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; overflow-x: hidden;
-            -webkit-user-select: none; user-select: none;
+            margin: 0; padding: 0; background: var(--bg-main); color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            -webkit-user-select: none; user-select: none; overflow-x: hidden;
         }
-        #app-container {
-            width: 100%; max-width: 440px;
-            display: flex; flex-direction: column;
-            padding-bottom: 30px;
-        }
+        #app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; padding-bottom: 20px; }
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background: var(--bg-card);
-            border-bottom: 2px solid #1c2636; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;
+            background: var(--bg-card); border-bottom: 1px solid #1d273d; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
-        .logo { font-weight: 800; font-size: 1.2rem; color: var(--accent-blue); letter-spacing: 1px; }
+        .logo { font-weight: 900; font-size: 1.1rem; color: var(--accent-blue); letter-spacing: 0.5px; }
         .balance-box {
-            display: flex; align-items: center; gap: 6px;
-            background: #1c2636; padding: 6px 14px; border-radius: 20px;
-            font-weight: bold; border: 1px solid rgba(251, 192, 45, 0.3);
+            display: flex; align-items: center; gap: 6px; background: var(--bg-input);
+            padding: 6px 14px; border-radius: 20px; font-weight: bold; border: 1px solid rgba(251, 192, 45, 0.2);
         }
         .star-icon {
-            width: 18px; height: 18px; background: var(--tg-star);
+            width: 16px; height: 16px; background: var(--tg-star);
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            box-shadow: 0 0 8px var(--tg-star);
+            box-shadow: 0 0 10px var(--tg-star);
         }
-        nav { display: flex; gap: 10px; padding: 15px 20px; }
+        nav { display: flex; gap: 8px; padding: 12px 16px; }
         .nav-btn {
-            flex: 1; padding: 12px; border: none; border-radius: 12px;
-            background: var(--bg-card); color: #8b949e; font-weight: bold;
-            font-size: 0.95rem; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+            flex: 1; padding: 10px; border: none; border-radius: 10px; background: var(--bg-card);
+            color: #7e8b9b; font-weight: bold; font-size: 0.9rem; cursor: pointer; border: 1px solid transparent;
         }
-        .nav-btn.active {
-            background: rgba(0, 229, 255, 0.1); color: var(--accent-blue); border: 1px solid var(--accent-blue);
-        }
-        .game-screen { display: none; padding: 0 20px; }
+        .nav-btn.active { background: rgba(0, 240, 255, 0.08); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .game-screen { display: none; padding: 0 16px; }
         .game-screen.active { display: block; }
-        .history-line {
-            display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto;
-            padding: 4px 0; scrollbar-width: none;
-        }
-        .history-item {
-            background: #1c2636; padding: 5px 12px; border-radius: 8px;
-            font-size: 0.85rem; font-weight: bold; color: var(--accent-blue);
-        }
+        .history-line { display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; padding: 2px 0; scrollbar-width: none; }
+        .history-item { background: #141d30; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--accent-blue); }
         .history-item.medium { color: var(--accent-purple); }
-        .history-item.high { color: var(--accent-gold); text-shadow: 0 0 5px var(--accent-gold); }
-        .crash-viewport {
-            height: 240px; background: #070a10; border-radius: 16px;
-            position: relative; overflow: hidden; border: 1px solid #1c2636;
-        }
+        .history-item.high { color: var(--accent-gold); text-shadow: 0 0 6px var(--accent-gold); }
+        .crash-viewport { height: 210px; background: #03050a; border-radius: 14px; position: relative; overflow: hidden; border: 1px solid #141d30; }
         #crash-canvas { width: 100%; height: 100%; display: block; }
         #crash-mult-display {
-            position: absolute; top: 30px; width: 100%; text-align: center;
-            font-size: 3.5rem; font-weight: 900; color: #fff; z-index: 5;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            position: absolute; top: 25px; width: 100%; text-align: center; font-size: 3.2rem;
+            font-weight: 900; color: #fff; z-index: 5; text-shadow: 0 4px 12px rgba(0,0,0,0.7);
         }
-        .mines-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
-            margin: 15px 0; background: #070a10; padding: 12px; border-radius: 16px;
+        #crash-timer-display {
+            position: absolute; top: 85px; width: 100%; text-align: center; font-size: 1.1rem;
+            font-weight: bold; color: var(--accent-gold); z-index: 5; display: none;
         }
-        .mine-tile {
-            aspect-ratio: 1; background: var(--bg-card); border-radius: 10px;
-            border: 1px solid #25334a; cursor: pointer; transition: 0.15s;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; font-weight: bold; color: transparent;
-        }
-        .mine-tile.open-gem { background: rgba(0, 230, 118, 0.15); border-color: var(--accent-green); color: var(--accent-green) !important; }
-        .mine-tile.open-bomb { background: rgba(255, 23, 68, 0.15); border-color: var(--accent-red); color: var(--accent-red) !important; }
-        .controls-card {
-            background: var(--bg-card); padding: 15px; border-radius: 16px;
-            margin-top: 15px; border: 1px solid #1c2636;
-        }
-        .row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+        .controls-card { background: var(--bg-card); padding: 14px; border-radius: 14px; margin-top: 12px; border: 1px solid #141d30; }
+        .row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
         .flex-1 { flex: 1; }
-        .label { font-size: 0.85rem; color: #8b949e; margin-bottom: 4px; text-align: left; }
+        .label { font-size: 0.8rem; color: #7e8b9b; margin-bottom: 4px; text-align: left; }
         input, select {
-            width: 100%; box-sizing: border-box; padding: 10px;
-            background: var(--bg-input); border: 1px solid #25334a;
-            border-radius: 8px; color: #fff; font-size: 1rem; font-weight: bold;
+            width: 100%; box-sizing: border-box; padding: 10px; background: var(--bg-input);
+            border: 1px solid #1d273d; border-radius: 8px; color: #fff; font-size: 0.95rem; font-weight: bold;
         }
         .main-btn {
-            width: 100%; padding: 15px; border: none; border-radius: 12px;
-            background: var(--accent-green); color: #000; font-size: 1.2rem;
-            font-weight: 800; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+            width: 100%; padding: 14px; border: none; border-radius: 10px; background: var(--accent-green);
+            color: #000; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 255, 102, 0.2);
         }
-        .main-btn.danger { background: var(--accent-red); color: #fff; box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3); }
-        .main-btn:disabled { background: #21262d; color: #8b949e; box-shadow: none; }
-        .live-bets {
-            margin-top: 20px; background: var(--bg-card); border-radius: 16px;
-            padding: 12px; border: 1px solid #1c2636;
-        }
-        .live-title { font-size: 0.85rem; font-weight: bold; color: #8b949e; text-align: left; margin-bottom: 8px; display: flex; justify-content: space-between;}
-        .bet-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 4px; border-bottom: 1px solid #1c2636; font-size: 0.85rem;
-        }
-        .bet-user { font-weight: 600; color: #eef1f6; }
-        .bet-value { display: flex; align-items: center; gap: 4px; font-weight: bold; }
-        .bet-mult { color: var(--accent-green); font-weight: bold; background: rgba(0,230,118,0.1); padding: 2px 6px; border-radius: 4px;}
-        .bet-mult.waiting { color: #8b949e; background: #1c2636; }
+        .main-btn.danger { background: var(--accent-red); color: #fff; box-shadow: 0 4px 12px rgba(255, 0, 85, 0.2); }
+        .main-btn.waiting { background: var(--bg-input); color: var(--accent-gold); box-shadow: none; border: 1px solid var(--accent-gold); }
+        .main-btn:disabled { background: #141d30; color: #4e5d78; box-shadow: none; cursor: not-allowed; }
+        .live-bets { margin-top: 15px; background: var(--bg-card); border-radius: 14px; padding: 12px; border: 1px solid #141d30; }
+        .live-title { font-size: 0.8rem; font-weight: bold; color: #7e8b9b; text-align: left; margin-bottom: 8px; display: flex; justify-content: space-between;}
+        .bet-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; border-bottom: 1px solid #141d30; font-size: 0.85rem; }
+        .bet-row.my-bet-row { background: rgba(0, 240, 255, 0.05); border-left: 3px solid var(--accent-blue); padding-left: 6px; }
+        .bet-row.won-row { background: rgba(0, 255, 102, 0.03); }
+        .bet-user { font-weight: 600; color: #dbdfeb; display: flex; align-items: center; gap: 6px; }
+        .bet-value { display: flex; align-items: center; gap: 4px; font-weight: bold; min-width: 70px; justify-content: flex-end; }
+        .bet-mult { color: var(--accent-green); font-weight: bold; background: rgba(0,255,102,0.1); padding: 2px 6px; border-radius: 4px; min-width: 50px; text-align: center;}
+        .bet-mult.waiting { color: #7e8b9b; background: var(--bg-input); }
+        .bet-mult.crushed { color: var(--accent-red); background: rgba(255,0,85,0.08); }
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 12px 0; background: #03050a; padding: 10px; border-radius: 14px; }
+        .mine-tile { aspect-ratio: 1; background: var(--bg-card); border-radius: 8px; border: 1px solid #1d273d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .mine-tile.open-gem { background: rgba(0, 255, 102, 0.1); border-color: var(--accent-green); color: var(--accent-green); }
+        .mine-tile.open-bomb { background: rgba(255, 0, 85, 0.1); border-color: var(--accent-red); color: var(--accent-red); }
     </style>
 </head>
 <body>
 <div id="app-container">
     <header>
-        <div class="logo">⚡ GALAXY CASINO</div>
+        <div class="logo">⚡ GALAXY MULTIPLAYER</div>
         <div class="balance-box"><span id="global-balance">1000</span><div class="star-icon"></div></div>
     </header>
     <nav>
-        <button id="tab-crash" class="nav-btn active" onclick="switchTab('crash')">🚀 CRASH</button>
+        <button id="tab-crash" class="nav-btn active" onclick="switchTab('crash')">🚀 CRASH LIVE</button>
         <button id="tab-mines" class="nav-btn" onclick="switchTab('mines')">💣 MINES</button>
     </nav>
     <div id="screen-crash" class="game-screen active">
         <div class="history-line" id="crash-history">
-            <div class="history-item">1.25x</div>
-            <div class="history-item medium">3.40x</div>
-            <div class="history-item high">24.50x</div>
+            <div class="history-item">1.45x</div>
+            <div class="history-item medium">2.10x</div>
+            <div class="history-item high">14.80x</div>
         </div>
         <div class="crash-viewport">
             <div id="crash-mult-display">1.00x</div>
+            <div id="crash-timer-display">До взлета: 5.0с</div>
             <canvas id="crash-canvas"></canvas>
         </div>
         <div class="controls-card">
-            <div class="row"><div class="flex-1"><div class="label">Размер ставки:</div><input type="number" id="crash-bet" value="10" min="1"></div></div>
-            <button id="crash-btn" class="main-btn" onclick="handleCrashAction()">ВЗЛЕТЕТЬ</button>
+            <div class="row"><div class="flex-1"><div class="label">Ставка на следующий раунд:</div><input type="number" id="crash-bet" value="10" min="1"></div></div>
+            <button id="crash-btn" class="main-btn" onclick="handleCrashAction()">ПОСТАВИТЬ</button>
         </div>
         <div class="live-bets">
-            <div class="live-title"><span>Живые ставки игроков</span><span style="color:var(--accent-blue)">● Live</span></div>
+            <div class="live-title"><span>Таблица ставок раунда</span><span style="color:var(--accent-blue)">● В эфире</span></div>
             <div id="crash-players-list"></div>
         </div>
     </div>
     <div id="screen-mines" class="game-screen">
-        <div class="controls-card" style="margin-top:0; margin-bottom:15px;">
-            <div style="font-size:1.1rem; font-weight:bold; color:var(--accent-blue); text-align:left;" id="mines-status">Настройте мины и ставку</div>
+        <div class="controls-card" style="margin-top:0; margin-bottom:12px;">
+            <div style="font-size:1rem; font-weight:bold; color:var(--accent-blue); text-align:left;" id="mines-status">Настройте мины и ставку</div>
         </div>
         <div class="mines-grid" id="mines-board"></div>
         <div class="controls-card">
@@ -183,9 +150,6 @@
 </div>
 
 <script>
-    const tg = window.Telegram?.WebApp;
-    if (tg) { tg.ready(); tg.expand(); }
-
     let balance = 1000;
     const bEl = document.getElementById('global-balance');
     function setBalance(v) { balance = v; bEl.textContent = balance; }
@@ -198,74 +162,93 @@
         if(tab === 'crash') resizeCrashCanvas();
     }
 
+    /* ========================================================
+       ГРАФИЧЕСКИЙ ДВИЖОК КРАША С НОВОЙ КИБЕРПАНК-РАКЕТОЙ
+       ======================================================== */
     const cCanvas = document.getElementById('crash-canvas');
     const cCtx = cCanvas.getContext('2d');
     const cDisplay = document.getElementById('crash-mult-display');
+    const cTimerDisplay = document.getElementById('crash-timer-display');
     const cBtn = document.getElementById('crash-btn');
     const cBetInput = document.getElementById('crash-bet');
 
-    let cIsPlaying = false, cHasCashout = false;
-    let cMult = 1.00, cCrashPoint = 0, cCurrentBet = 0, cLoop = null;
-    let cTime = 0;
+    let cGameState = "LOBBY"; // LOBBY, FLYING, CRASHED
+    let cMult = 1.00, cCrashPoint = 0, cTime = 0, cMainLoop = null;
+    let myBetActive = false, myBetAmount = 0, myCashoutX = 0, hasCashoutThisRound = false;
 
     function resizeCrashCanvas() {
-        cCanvas.width = cCanvas.clientWidth;
-        cCanvas.height = cCanvas.clientHeight;
+        cCanvas.width = cCanvas.clientWidth; cCanvas.height = cCanvas.clientHeight;
         drawCrashScene();
     }
     window.addEventListener('resize', resizeCrashCanvas);
-    setTimeout(resizeCrashCanvas, 100);
+    setTimeout(resizeCrashCanvas, 150);
 
     function drawCrashScene() {
         cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
         let w = cCanvas.width, h = cCanvas.height;
 
-        cCtx.strokeStyle = '#141d2b'; cCtx.lineWidth = 1;
+        // Рисуем сетку на заднем фоне
+        cCtx.strokeStyle = '#0d1322'; cCtx.lineWidth = 1;
         for(let i=0; i<w; i+=40) { cCtx.beginPath(); cCtx.moveTo(i,0); cCtx.lineTo(i,h); cCtx.stroke(); }
         for(let j=0; j<h; j+=40) { cCtx.beginPath(); cCtx.moveTo(0,j); cCtx.lineTo(w,j); cCtx.stroke(); }
 
-        if (cIsPlaying || cMult === cCrashPoint) {
-            let zoomX = 1 + (cMult - 1) * 0.5;
-            let zoomY = 1 + Math.pow(cMult - 1, 1.2) * 0.4;
+        if (cGameState === "FLYING" || cGameState === "CRASHED") {
+            // Динамический зум: ракета летит бесконечно, график сжимается
+            let zoomX = 1 + (cMult - 1) * 0.45;
+            let zoomY = 1 + Math.pow(cMult - 1, 1.15) * 0.35;
 
-            let startX = 30, startY = h - 30;
-            let endX = startX + (cTime * 5) / zoomX;
-            let endY = startY - (Math.pow(cTime, 1.3) * 0.7) / zoomY;
+            let startX = 35, startY = h - 35;
+            let endX = startX + (cTime * 5.2) / zoomX;
+            let endY = startY - (Math.pow(cTime, 1.28) * 0.75) / zoomY;
 
-            if (endX > w - 50) endX = w - 50;
-            if (endY < 50) endY = 50;
+            if (endX > w - 45) endX = w - 45;
+            if (endY < 45) endY = 45;
 
+            // Отрисовка неонового графика
             cCtx.beginPath();
             cCtx.strokeStyle = varColor('--accent-blue'); cCtx.lineWidth = 4;
             cCtx.shadowBlur = 15; cCtx.shadowColor = varColor('--accent-blue');
             cCtx.moveTo(startX, startY);
-            cCtx.quadraticCurveTo((startX + endX)/2, startY + 10, endX, endY);
+            cCtx.quadraticCurveTo((startX + endX)/2, startY + 5, endX, endY);
             cCtx.stroke();
             cCtx.shadowBlur = 0;
 
-            if (cIsPlaying) {
+            if (cGameState === "FLYING") {
+                // ОТРИСОВКА НОВОЙ КИБЕРПАНК-РАКЕТЫ
                 cCtx.save();
                 cCtx.translate(endX, endY);
-                cCtx.rotate(-Math.PI / 4 + (Math.sin(cTime*0.2)*0.04));
+                cCtx.rotate(-Math.PI / 4 + (Math.sin(cTime * 0.25) * 0.03)); // Легкая качка
 
-                let flameLen = 12 + Math.random()*15;
-                let grad = cCtx.createLinearGradient(0, 0, -flameLen, 0);
-                grad.addColorStop(0, '#ff9100'); grad.addColorStop(1, 'rgba(255,23,68,0)');
-                cCtx.fillStyle = grad; cCtx.beginPath();
-                cCtx.moveTo(-15, -4); cCtx.lineTo(-15 - flameLen, 0); cCtx.lineTo(-15, 4); cCtx.fill();
+                // Реактивный огонь
+                let flameSize = 14 + Math.random() * 16;
+                let flameGrad = cCtx.createLinearGradient(0, 0, -flameSize, 0);
+                flameGrad.addColorStop(0, '#ff9100'); flameGrad.addColorStop(0.5, '#ff3d00'); flameGrad.addColorStop(1, 'rgba(255,0,85,0)');
+                cCtx.fillStyle = flameGrad; cCtx.beginPath();
+                cCtx.moveTo(-16, -5); cCtx.lineTo(-16 - flameSize, 0); cCtx.lineTo(-16, 5); cCtx.fill();
 
-                cCtx.fillStyle = '#ffffff'; cCtx.beginPath(); cCtx.ellipse(0, 0, 20, 8, 0, 0, 2*Math.PI); cCtx.fill();
-                cCtx.fillStyle = varColor('--accent-red'); cCtx.beginPath(); cCtx.ellipse(14, 0, 6, 8, 0, -Math.PI/2, Math.PI/2); cCtx.fill();
-                cCtx.fillStyle = varColor('--accent-blue'); 
-                cCtx.beginPath(); cCtx.moveTo(-6, -7); cCtx.lineTo(-14, -15); cCtx.lineTo(-4, -7); cCtx.fill();
-                cCtx.beginPath(); cCtx.moveTo(-6, 7); cCtx.lineTo(-14, 15); cCtx.lineTo(-4, 7); cCtx.fill();
-                cCtx.fillStyle = '#0a0e17'; cCtx.beginPath(); cCtx.arc(3, 0, 4, 0, 2*Math.PI); cCtx.fill();
+                // Корпус (титановый градиент)
+                let bodyGrad = cCtx.createLinearGradient(-15, 0, 15, 0);
+                bodyGrad.addColorStop(0, '#bdc3c7'); bodyGrad.addColorStop(1, '#ffffff');
+                cCtx.fillStyle = bodyGrad; cCtx.beginPath(); cCtx.ellipse(0, 0, 22, 9, 0, 0, 2 * Math.PI); cCtx.fill();
+
+                // Обтекатель носа (неоново-красный)
+                cCtx.fillStyle = varColor('--accent-red'); cCtx.beginPath(); cCtx.ellipse(15, 0, 7, 9, 0, -Math.PI / 2, Math.PI / 2); cCtx.fill();
+
+                // Космические крылья с подсветкой
+                cCtx.fillStyle = varColor('--accent-blue');
+                cCtx.beginPath(); cCtx.moveTo(-5, -8); cCtx.lineTo(-16, -17); cCtx.lineTo(-3, -8); cCtx.fill();
+                cCtx.beginPath(); cCtx.moveTo(-5, 8); cCtx.lineTo(-16, 17); cCtx.lineTo(-3, 8); cCtx.fill();
+
+                // Иллюминатор кабины пилота
+                cCtx.fillStyle = '#060913'; cCtx.beginPath(); cCtx.arc(4, 0, 4.5, 0, 2 * Math.PI); cCtx.fill();
+                cCtx.strokeStyle = varColor('--accent-blue'); cCtx.lineWidth = 1; cCtx.stroke();
                 cCtx.restore();
             } else {
+                // АНИМАЦИЯ КРАША (ВЗРЫВ)
                 cCtx.save(); cCtx.translate(endX, endY);
-                let gradExpl = cCtx.createRadialGradient(0,0,2, 0,0,35);
-                gradExpl.addColorStop(0, '#fff'); gradExpl.addColorStop(0.2, '#ffea00'); gradExpl.addColorStop(0.5, '#ff3d00'); gradExpl.addColorStop(1, 'rgba(0,0,0,0)');
-                cCtx.fillStyle = gradExpl; cCtx.beginPath(); cCtx.arc(0,0,40, 0, 2*Math.PI); cCtx.fill();
+                let expGrad = cCtx.createRadialGradient(0, 0, 2, 0, 0, 40);
+                expGrad.addColorStop(0, '#fff'); expGrad.addColorStop(0.2, '#ffea00'); expGrad.addColorStop(0.6, '#ff0055'); expGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                cCtx.fillStyle = expGrad; cCtx.beginPath(); cCtx.arc(0, 0, 45, 0, 2 * Math.PI); cCtx.fill();
                 cCtx.restore();
             }
         }
@@ -274,59 +257,128 @@
     function varColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
     function generateCrashPoint() {
-        let e = Math.random();
-        if (e < 0.03) return 1.00;
-        let result = 1.01 + (0.97 / (Math.random() + 0.001)) * 0.05;
-        return parseFloat(Math.min(200, Math.max(1.01, result)).toFixed(2));
+        let rand = Math.random();
+        if (rand < 0.04) return 1.00; // Моментальный взрыв (мощный риск)
+        let res = 1.01 + (0.96 / (Math.random() + 0.001)) * 0.06;
+        return parseFloat(Math.min(300, Math.max(1.01, res)).toFixed(2));
+    }
+    // АВТОМАТИЧЕСКИЙ ЦИКЛ СЕРВЕРА КРАШ-ИГРЫ
+    function runServerTimeline() {
+        cGameState = "LOBBY";
+        hasCashoutThisRound = false;
+        myCashoutX = 0;
+        
+        cBtn.disabled = false;
+        if (myBetActive) {
+            cBtn.textContent = "В ИГРЕ (ЖДЕМ ВЗЛЕТ)";
+            cBtn.className = "main-btn waiting";
+            cBetInput.disabled = true;
+        } else {
+            cBtn.textContent = "ПОСТАВИТЬ";
+            cBtn.className = "main-btn";
+            cBetInput.disabled = false;
+        }
+
+        let timeLeft = 6.0; // 6 секунд на ставки между раундами
+        cTimerDisplay.style.display = "block";
+        cTimerDisplay.textContent = `Взлет через: ${timeLeft.toFixed(1)}с`;
+        cDisplay.textContent = "1.00x";
+        cDisplay.style.color = "#7e8b9b";
+        
+        generateFakePlayers();
+        renderPlayersList();
+
+        let lobbyInterval = setInterval(() => {
+            timeLeft -= 0.1;
+            if (timeLeft <= 0) {
+                clearInterval(lobbyInterval);
+                cTimerDisplay.style.display = "none";
+                launchRocket();
+            } else {
+                cTimerDisplay.textContent = `Взлет через: ${timeLeft.toFixed(1)}с`;
+            }
+        }, 100);
+    }
+
+    function launchRocket() {
+        cGameState = "FLYING";
+        cMult = 1.00;
+        cTime = 0;
+        cCrashPoint = generateCrashPoint();
+        cDisplay.style.color = "#fff";
+
+        if (myBetActive) {
+            cBtn.textContent = "ЗАБРАТЬ";
+            cBtn.className = "main-btn danger";
+            cBtn.disabled = false;
+        } else {
+            cBtn.textContent = "РАУНД ИДЕТ";
+            cBtn.disabled = true;
+        }
+
+        cMainLoop = setInterval(() => {
+            cTime += 0.5;
+            
+            // Динамический разгон коэффициента
+            if (cMult < 2) cMult += 0.01;
+            else if (cMult < 5) cMult += 0.03;
+            else if (cMult < 20) cMult += 0.15;
+            else cMult += 0.65;
+
+            cDisplay.textContent = cMult.toFixed(2) + 'x';
+            drawCrashScene();
+            
+            updateFakePlayers(cMult);
+            renderPlayersList();
+
+            if (cMult >= cCrashPoint) {
+                clearInterval(cMainLoop);
+                cGameState = "CRASHED";
+                cDisplay.textContent = 'CRASH @ ' + cCrashPoint.toFixed(2) + 'x';
+                cDisplay.style.color = varColor('--accent-red');
+                drawCrashScene();
+                
+                if (myBetActive && !hasCashoutThisRound) {
+                    myBetActive = false;
+                }
+
+                updateFakePlayers(cCrashPoint);
+                renderPlayersList();
+                addCrashHistory(cCrashPoint.toFixed(2) + 'x');
+                
+                setTimeout(() => {
+                    myBetActive = false;
+                    runServerTimeline();
+                }, 3000);
+            }
+        }, 45);
     }
     function handleCrashAction() {
-        if(!cIsPlaying) {
-            cCurrentBet = parseInt(cBetInput.value);
-            if(isNaN(cCurrentBet) || cCurrentBet <= 0 || balance < cCurrentBet) return;
-            setBalance(balance - cCurrentBet);
-            cIsPlaying = true; cHasCashout = false; cMult = 1.00; cTime = 0;
-            cBetInput.disabled = true; cBtn.textContent = "ЗАБРАТЬ"; cBtn.classList.add('danger');
-            cDisplay.style.color = '#fff';
-            
-            cCrashPoint = generateCrashPoint();
-            generateFakePlayers();
-
-            cLoop = setInterval(() => {
-                cTime += 0.5;
-                if (cMult < 2) cMult += 0.01;
-                else if (cMult < 5) cMult += 0.03;
-                else if (cMult < 20) cMult += 0.12;
-                else cMult += 0.45;
-
-                cDisplay.textContent = cMult.toFixed(2) + 'x';
-                drawCrashScene();
-                updateFakePlayers(cMult);
-
-                if(cMult >= cCrashPoint) {
-                    clearInterval(cLoop);
-                    cIsPlaying = false;
-                    cDisplay.textContent = 'CRASH @ ' + cCrashPoint.toFixed(2) + 'x';
-                    cDisplay.style.color = varColor('--accent-red');
-                    drawCrashScene();
-                    addCrashHistory(cCrashPoint.toFixed(2) + 'x');
-                    setTimeout(resetCrashGame, 2500);
-                }
-            }, 40);
-        } else {
-            if(cHasCashout) return;
-            cHasCashout = true;
-            let win = Math.floor(cCurrentBet * cMult);
+        if (cGameState === "LOBBY") {
+            if (myBetActive) {
+                setBalance(balance + myBetAmount);
+                myBetActive = false;
+                cBtn.textContent = "ПОСТАВИТЬ";
+                cBtn.className = "main-btn";
+                renderPlayersList();
+            } else {
+                myBetAmount = parseInt(cBetInput.value);
+                if (isNaN(myBetAmount) || myBetAmount <= 0 || balance < myBetAmount) return;
+                setBalance(balance - myBetAmount);
+                myBetActive = true;
+                cBtn.textContent = "В ИГРЕ (ЖДЕМ ВЗЛЕТ)";
+                cBtn.className = "main-btn waiting";
+                renderPlayersList();
+            }
+        } else if (cGameState === "FLYING") {
+            if (hasCashoutThisRound) return;
+            hasCashoutThisRound = true;
+            myCashoutX = cMult;
+            let win = Math.floor(myBetAmount * myCashoutX);
             setBalance(balance + win);
-            cBtn.textContent = `Выигрыш +${win} 🌟`; cBtn.disabled = true;
-            cDisplay.style.color = varColor('--accent-green');
+            cBtn.textContent = `Забрал +${win} 🌟`;
+            cBtn.disabled = true;
         }
-    }
-
-    function resetCrashGame() {
-        cBtn.disabled = false; cBtn.textContent = "ВЗЛЕТЕТЬ"; cBtn.classList.remove('danger');
-        cBetInput.disabled = false; cDisplay.textContent = '1.00x'; cDisplay.style.color = '#fff';
-        cMult = 1.00; drawCrashScene();
-        document.getElementById('crash-players-list').innerHTML = '';
     }
 
     function addCrashHistory(txt) {
@@ -338,39 +390,78 @@
         else if (num >= 2.0) item.className += ' medium';
         item.textContent = txt;
         hLine.insertBefore(item, hLine.firstChild);
-        if(hLine.children.length > 5) hLine.lastChild.remove();
+        if (hLine.children.length > 5) hLine.lastChild.remove();
     }
 
     let fakePlayers = [];
-    const botNames = ["Данил", "Артур", "Маша", "Shark_77", "Guru_Stars", "Kamil_Fan", "Vitek", "Юля", "Nikitka"];
+    const botNames = ["Данил", "Артур", "Маша_VIP", "Shark_77", "Guru_Stars", "Kamil_Fan", "Vitek", "Юля_05", "Nikitka", "MinesKing", "CryptoFly"];
+    
     function generateFakePlayers() {
         fakePlayers = [];
-        let num = 3 + Math.floor(Math.random()*4);
-        let listEl = document.getElementById('crash-players-list');
-        listEl.innerHTML = '';
-        for(let i=0; i<num; i++) {
-            let name = botNames[Math.floor(Math.random()*botNames.length)];
-            let bet = 5 + Math.floor(Math.random()*150);
-            let cashoutX = parseFloat((1.1 + Math.random()*4).toFixed(2));
-            if(Math.random() < 0.1) cashoutX = parseFloat((10 + Math.random()*30).toFixed(2));
-            fakePlayers.push({name: name, bet: bet, x: cashoutX, active: true});
-            listEl.innerHTML += `<div class="bet-row" id="bot-${i}"><span class="bet-user">${name}</span><span class="bet-mult waiting" id="bot-x-${i}">В полете...</span><span class="bet-value">${bet} <div class="star-icon"></div></span></div>`;
+        let num = 4 + Math.floor(Math.random() * 4);
+        for (let i = 0; i < num; i++) {
+            let name = botNames[Math.floor(Math.random() * botNames.length)];
+            let bet = 5 + Math.floor(Math.random() * 200);
+            let targetX = parseFloat((1.1 + Math.random() * 4.5).toFixed(2));
+            if (Math.random() < 0.08) targetX = parseFloat((10 + Math.random() * 40).toFixed(2));
+            fakePlayers.push({ name: name, bet: bet, x: targetX, active: true, state: "FLYING" });
         }
     }
+
     function updateFakePlayers(currentX) {
-        fakePlayers.forEach((p, idx) => {
-            if(p.active && currentX >= p.x) {
-                p.active = false;
-                let elX = document.getElementById(`bot-x-${idx}`);
-                if(elX && p.x <= cCrashPoint) { elX.className = "bet-mult"; elX.textContent = p.x.toFixed(2) + 'x'; }
+        fakePlayers.forEach(p => {
+            if (p.active && currentX >= p.x && p.x <= cCrashPoint) {
+                p.active = false; p.state = "WON";
             } else if (p.active && currentX >= cCrashPoint) {
-                p.active = false;
-                let elX = document.getElementById(`bot-x-${idx}`);
-                if(elX) { elX.style.color = varColor('--accent-red'); elX.textContent = 'Взрыв'; }
+                p.active = false; p.state = "CRASHED";
             }
         });
     }
 
+    function renderPlayersList() {
+        let listEl = document.getElementById('crash-players-list');
+        listEl.innerHTML = '';
+
+        if (myBetActive) {
+            let multText = "В полете...";
+            let rowClass = "bet-row my-bet-row";
+            let displayVal = Math.floor(myBetAmount * cMult);
+
+            if (hasCashoutThisRound) {
+                multText = myCashoutX.toFixed(2) + 'x';
+                rowClass = "bet-row my-bet-row won-row";
+                displayVal = Math.floor(myBetAmount * myCashoutX);
+            } else if (cGameState === "CRASHED") {
+                multText = "Взрыв";
+                rowClass = "bet-row my-bet-row";
+                displayVal = myBetAmount;
+            }
+
+            listEl.innerHTML += `<div class="${rowClass}"><span class="bet-user">👑 Ты (Камиль)</span><span class="${hasCashoutThisRound ? 'bet-mult' : (cGameState === 'CRASHED' ? 'bet-mult crushed' : 'bet-mult waiting')}">${multText}</span><span class="bet-value" style="color:var(--accent-blue)">${displayVal} <div class="star-icon"></div></span></div>`;
+        }
+
+        fakePlayers.forEach(p => {
+            let mText = "В полете...";
+            let rClass = "bet-row";
+            let curVal = Math.floor(p.bet * cMult);
+
+            if (p.state === "WON") {
+                mText = p.x.toFixed(2) + 'x';
+                rClass = "bet-row won-row";
+                curVal = Math.floor(p.bet * p.x);
+            } else if (p.state === "CRASHED") {
+                mText = "Взрыв";
+                curVal = p.bet;
+            }
+
+            listEl.innerHTML += `<div class="${rClass}"><span class="bet-user">👤 ${p.name}</span><span class="${p.state === 'WON' ? 'bet-mult' : (p.state === 'CRASHED' ? 'bet-mult crushed' : 'bet-mult waiting')}">${mText}</span><span class="bet-value">${curVal} <div class="star-icon"></div></span></div>`;
+        });
+    }
+
+    runServerTimeline();
+    /* ========================================================
+       ЛОГИКА СИСТЕМЫ ИГРЫ МИНЫ (5х5)
+       ======================================================== */
     let mBoard = [], mBombs = [], mIsPlaying = false, mBet = 0, mGemsFound = 0, mTotalBombs = 5;
     const mBoardEl = document.getElementById('mines-board');
     const mStatusEl = document.getElementById('mines-status');
@@ -422,7 +513,7 @@
             let curMult = getMinesMultiplier();
             let win = Math.floor(mBet * curMult);
             setBalance(balance + win);
-            mStatusEl.textContent = `🎉 Забрал +${win} 🌟`; mStatusEl.style.color = varColor('--accent-green');
+            mStatusEl.textContent = `🎉 Забрал +${win} 🌟`; mStatusEl.style.color = 'var(--accent-green)';
             revealBoard(true);
             endMinesGame();
         }
@@ -436,7 +527,7 @@
 
         if(mBombs[id]) {
             t.classList.add('open-bomb'); t.textContent = '💥';
-            mStatusEl.textContent = '💥 КРАШ! Вы попали на мину!'; mStatusEl.style.color = varColor('--accent-red');
+            mStatusEl.textContent = '💥 КРАШ! Вы попали на мину!'; mStatusEl.style.color = 'var(--accent-red)';
             revealBoard(false);
             endMinesGame();
         } else {
@@ -449,7 +540,7 @@
             if(mGemsFound === (25 - mTotalBombs)) {
                 let win = Math.floor(mBet * curMult);
                 setBalance(balance + win);
-                mStatusEl.textContent = `👑 ИДЕАЛЬНО! Выигрыш +${win} 🌟`; mStatusEl.style.color = varColor('--accent-green');
+                mStatusEl.textContent = `👑 ИДЕАЛЬНО! Выигрыш +${win} 🌟`; mStatusEl.style.color = 'var(--accent-green)';
                 revealBoard(true);
                 endMinesGame();
             }
