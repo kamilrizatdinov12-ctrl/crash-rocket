@@ -3,258 +3,474 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Краш Ракета PRO</title>
+    <title>⚡ GALAXY STARS CASINO ⚡</title>
     <script src="https://telegram.org"></script>
     <style>
+        :root {
+            --bg-main: #0a0e17;
+            --bg-card: #131a26;
+            --bg-input: #1c2636;
+            --tg-star: #fbc02d;
+            --accent-blue: #00e5ff;
+            --accent-purple: #b200ff;
+            --accent-gold: #ff9100;
+            --accent-green: #00e676;
+            --accent-red: #ff1744;
+        }
         body {
-            margin: 0;
-            padding: 0;
-            background: #0d1117;
-            color: white;
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            margin: 0; padding: 0;
+            background: var(--bg-main);
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; overflow-x: hidden;
+            -webkit-user-select: none; user-select: none;
         }
-        #game-container {
-            width: 90%;
-            max-width: 400px;
-            background: #161b22;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        #app-container {
+            width: 100%; max-width: 440px;
+            display: flex; flex-direction: column;
+            padding-bottom: 30px;
         }
-        #screen {
-            height: 220px;
-            background: #090d13;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            position: relative;
-            overflow: hidden;
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: var(--bg-card);
+            border-bottom: 2px solid #1c2636; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        #game-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+        .logo { font-weight: 800; font-size: 1.2rem; color: var(--accent-blue); letter-spacing: 1px; }
+        .balance-box {
+            display: flex; align-items: center; gap: 6px;
+            background: #1c2636; padding: 6px 14px; border-radius: 20px;
+            font-weight: bold; border: 1px solid rgba(251, 192, 45, 0.3);
         }
-        #multiplier {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #58a6ff;
-            position: absolute;
-            top: 20px;
-            width: 100%;
-            text-align: center;
-            z-index: 10;
-            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        .star-icon {
+            width: 18px; height: 18px; background: var(--tg-star);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            box-shadow: 0 0 8px var(--tg-star);
         }
-        #rocket {
-            font-size: 3rem;
-            position: absolute;
-            z-index: 5;
-            transform-origin: center;
-            display: none;
-            cursor: default;
-            user-select: none;
+        nav { display: flex; gap: 10px; padding: 15px 20px; }
+        .nav-btn {
+            flex: 1; padding: 12px; border: none; border-radius: 12px;
+            background: var(--bg-card); color: #8b949e; font-weight: bold;
+            font-size: 0.95rem; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
         }
-        .input-group {
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+        .nav-btn.active {
+            background: rgba(0, 229, 255, 0.1); color: var(--accent-blue); border: 1px solid var(--accent-blue);
         }
-        #bet-input {
-            width: 100px;
-            padding: 8px;
-            background: #21262d;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            color: white;
-            font-size: 1rem;
-            text-align: center;
+        .game-screen { display: none; padding: 0 20px; }
+        .game-screen.active { display: block; }
+        .history-line {
+            display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto;
+            padding: 4px 0; scrollbar-width: none;
         }
-        .btn {
-            background: #238636;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
+        .history-item {
+            background: #1c2636; padding: 5px 12px; border-radius: 8px;
+            font-size: 0.85rem; font-weight: bold; color: var(--accent-blue);
         }
-        .btn.cashout { background: #da3633; }
-        .btn:disabled { background: #21262d; color: #8b949e; }
-        #balance-container { margin-bottom: 15px; font-size: 1.2rem; color: #cae8ff; }
+        .history-item.medium { color: var(--accent-purple); }
+        .history-item.high { color: var(--accent-gold); text-shadow: 0 0 5px var(--accent-gold); }
+        .crash-viewport {
+            height: 240px; background: #070a10; border-radius: 16px;
+            position: relative; overflow: hidden; border: 1px solid #1c2636;
+        }
+        #crash-canvas { width: 100%; height: 100%; display: block; }
+        #crash-mult-display {
+            position: absolute; top: 30px; width: 100%; text-align: center;
+            font-size: 3.5rem; font-weight: 900; color: #fff; z-index: 5;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        .mines-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+            margin: 15px 0; background: #070a10; padding: 12px; border-radius: 16px;
+        }
+        .mine-tile {
+            aspect-ratio: 1; background: var(--bg-card); border-radius: 10px;
+            border: 1px solid #25334a; cursor: pointer; transition: 0.15s;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold; color: transparent;
+        }
+        .mine-tile.open-gem { background: rgba(0, 230, 118, 0.15); border-color: var(--accent-green); color: var(--accent-green) !important; }
+        .mine-tile.open-bomb { background: rgba(255, 23, 68, 0.15); border-color: var(--accent-red); color: var(--accent-red) !important; }
+        .controls-card {
+            background: var(--bg-card); padding: 15px; border-radius: 16px;
+            margin-top: 15px; border: 1px solid #1c2636;
+        }
+        .row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+        .flex-1 { flex: 1; }
+        .label { font-size: 0.85rem; color: #8b949e; margin-bottom: 4px; text-align: left; }
+        input, select {
+            width: 100%; box-sizing: border-box; padding: 10px;
+            background: var(--bg-input); border: 1px solid #25334a;
+            border-radius: 8px; color: #fff; font-size: 1rem; font-weight: bold;
+        }
+        .main-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 12px;
+            background: var(--accent-green); color: #000; font-size: 1.2rem;
+            font-weight: 800; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+        }
+        .main-btn.danger { background: var(--accent-red); color: #fff; box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3); }
+        .main-btn:disabled { background: #21262d; color: #8b949e; box-shadow: none; }
+        .live-bets {
+            margin-top: 20px; background: var(--bg-card); border-radius: 16px;
+            padding: 12px; border: 1px solid #1c2636;
+        }
+        .live-title { font-size: 0.85rem; font-weight: bold; color: #8b949e; text-align: left; margin-bottom: 8px; display: flex; justify-content: space-between;}
+        .bet-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 4px; border-bottom: 1px solid #1c2636; font-size: 0.85rem;
+        }
+        .bet-user { font-weight: 600; color: #eef1f6; }
+        .bet-value { display: flex; align-items: center; gap: 4px; font-weight: bold; }
+        .bet-mult { color: var(--accent-green); font-weight: bold; background: rgba(0,230,118,0.1); padding: 2px 6px; border-radius: 4px;}
+        .bet-mult.waiting { color: #8b949e; background: #1c2636; }
     </style>
 </head>
 <body>
-<div id="game-container">
-    <div id="balance-container">Баланс: <span id="balance">1000</span> 🌟</div>
-    
-    <div id="screen">
-        <div id="multiplier">1.00x</div>
-        <canvas id="game-canvas"></canvas>
-        <div id="rocket">🚀</div>
+<div id="app-container">
+    <header>
+        <div class="logo">⚡ GALAXY CASINO</div>
+        <div class="balance-box"><span id="global-balance">1000</span><div class="star-icon"></div></div>
+    </header>
+    <nav>
+        <button id="tab-crash" class="nav-btn active" onclick="switchTab('crash')">🚀 CRASH</button>
+        <button id="tab-mines" class="nav-btn" onclick="switchTab('mines')">💣 MINES</button>
+    </nav>
+    <div id="screen-crash" class="game-screen active">
+        <div class="history-line" id="crash-history">
+            <div class="history-item">1.25x</div>
+            <div class="history-item medium">3.40x</div>
+            <div class="history-item high">24.50x</div>
+        </div>
+        <div class="crash-viewport">
+            <div id="crash-mult-display">1.00x</div>
+            <canvas id="crash-canvas"></canvas>
+        </div>
+        <div class="controls-card">
+            <div class="row"><div class="flex-1"><div class="label">Размер ставки:</div><input type="number" id="crash-bet" value="10" min="1"></div></div>
+            <button id="crash-btn" class="main-btn" onclick="handleCrashAction()">ВЗЛЕТЕТЬ</button>
+        </div>
+        <div class="live-bets">
+            <div class="live-title"><span>Живые ставки игроков</span><span style="color:var(--accent-blue)">● Live</span></div>
+            <div id="crash-players-list"></div>
+        </div>
     </div>
-
-    <div class="input-group">
-        <label for="bet-input">Ставка:</label>
-        <input type="number" id="bet-input" value="10" min="1">
+    <div id="screen-mines" class="game-screen">
+        <div class="controls-card" style="margin-top:0; margin-bottom:15px;">
+            <div style="font-size:1.1rem; font-weight:bold; color:var(--accent-blue); text-align:left;" id="mines-status">Настройте мины и ставку</div>
+        </div>
+        <div class="mines-grid" id="mines-board"></div>
+        <div class="controls-card">
+            <div class="row">
+                <div class="flex-1">
+                    <div class="label">Ставка:</div>
+                    <input type="number" id="mines-bet" value="10" min="1">
+                </div>
+                <div class="flex-1">
+                    <div class="label">Количество мин:</div>
+                    <select id="mines-count">
+                        <option value="1">1 мина</option>
+                        <option value="3">3 мины</option>
+                        <option value="5" selected>5 мин</option>
+                        <option value="10">10 мин</option>
+                        <option value="15">15 мин</option>
+                        <option value="23">23 мины</option>
+                    </select>
+                </div>
+            </div>
+            <button id="mines-btn" class="main-btn" onclick="handleMinesAction()">НАЧАТЬ ИГРУ</button>
+        </div>
     </div>
-
-    <button id="action-btn" class="btn">ВЗЛЕТЕТЬ</button>
 </div>
 
 <script>
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
-    
+
     let balance = 1000;
-    let multiplier = 1.00;
-    let gameInterval = null;
-    let isPlaying = false;
-    let hasCashout = false;
-    let crashPoint = 0;
-    let currentBet = 10;
-    let trajectoryLog = [];
+    const bEl = document.getElementById('global-balance');
+    function setBalance(v) { balance = v; bEl.textContent = balance; }
 
-    const balanceEl = document.getElementById('balance');
-    const multiplierEl = document.getElementById('multiplier');
-    const rocketEl = document.getElementById('rocket');
-    const actionBtn = document.getElementById('action-btn');
-    const betInput = document.getElementById('bet-input');
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
+    function switchTab(tab) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.getElementById('screen-' + tab).classList.add('active');
+        if(tab === 'crash') resizeCrashCanvas();
     }
-    resizeCanvas();
 
-    function drawChart() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (trajectoryLog.length < 2) return;
+    const cCanvas = document.getElementById('crash-canvas');
+    const cCtx = cCanvas.getContext('2d');
+    const cDisplay = document.getElementById('crash-mult-display');
+    const cBtn = document.getElementById('crash-btn');
+    const cBetInput = document.getElementById('crash-bet');
 
-        ctx.beginPath();
-        ctx.strokeStyle = '#58a6ff';
-        ctx.lineWidth = 4;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = '#58a6ff';
+    let cIsPlaying = false, cHasCashout = false;
+    let cMult = 1.00, cCrashPoint = 0, cCurrentBet = 0, cLoop = null;
+    let cTime = 0;
 
-        ctx.moveTo(trajectoryLog[0].x, trajectoryLog[0].y);
-        for (let i = 1; i < trajectoryLog.length; i++) {
-            ctx.lineTo(trajectoryLog[i].x, trajectoryLog[i].y);
+    function resizeCrashCanvas() {
+        cCanvas.width = cCanvas.clientWidth;
+        cCanvas.height = cCanvas.clientHeight;
+        drawCrashScene();
+    }
+    window.addEventListener('resize', resizeCrashCanvas);
+    setTimeout(resizeCrashCanvas, 100);
+
+    function drawCrashScene() {
+        cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+        let w = cCanvas.width, h = cCanvas.height;
+
+        cCtx.strokeStyle = '#141d2b'; cCtx.lineWidth = 1;
+        for(let i=0; i<w; i+=40) { cCtx.beginPath(); cCtx.moveTo(i,0); cCtx.lineTo(i,h); cCtx.stroke(); }
+        for(let j=0; j<h; j+=40) { cCtx.beginPath(); cCtx.moveTo(0,j); cCtx.lineTo(w,j); cCtx.stroke(); }
+
+        if (cIsPlaying || cMult === cCrashPoint) {
+            let zoomX = 1 + (cMult - 1) * 0.5;
+            let zoomY = 1 + Math.pow(cMult - 1, 1.2) * 0.4;
+
+            let startX = 30, startY = h - 30;
+            let endX = startX + (cTime * 5) / zoomX;
+            let endY = startY - (Math.pow(cTime, 1.3) * 0.7) / zoomY;
+
+            if (endX > w - 50) endX = w - 50;
+            if (endY < 50) endY = 50;
+
+            cCtx.beginPath();
+            cCtx.strokeStyle = varColor('--accent-blue'); cCtx.lineWidth = 4;
+            cCtx.shadowBlur = 15; cCtx.shadowColor = varColor('--accent-blue');
+            cCtx.moveTo(startX, startY);
+            cCtx.quadraticCurveTo((startX + endX)/2, startY + 10, endX, endY);
+            cCtx.stroke();
+            cCtx.shadowBlur = 0;
+
+            if (cIsPlaying) {
+                cCtx.save();
+                cCtx.translate(endX, endY);
+                cCtx.rotate(-Math.PI / 4 + (Math.sin(cTime*0.2)*0.04));
+
+                let flameLen = 12 + Math.random()*15;
+                let grad = cCtx.createLinearGradient(0, 0, -flameLen, 0);
+                grad.addColorStop(0, '#ff9100'); grad.addColorStop(1, 'rgba(255,23,68,0)');
+                cCtx.fillStyle = grad; cCtx.beginPath();
+                cCtx.moveTo(-15, -4); cCtx.lineTo(-15 - flameLen, 0); cCtx.lineTo(-15, 4); cCtx.fill();
+
+                cCtx.fillStyle = '#ffffff'; cCtx.beginPath(); cCtx.ellipse(0, 0, 20, 8, 0, 0, 2*Math.PI); cCtx.fill();
+                cCtx.fillStyle = varColor('--accent-red'); cCtx.beginPath(); cCtx.ellipse(14, 0, 6, 8, 0, -Math.PI/2, Math.PI/2); cCtx.fill();
+                cCtx.fillStyle = varColor('--accent-blue'); 
+                cCtx.beginPath(); cCtx.moveTo(-6, -7); cCtx.lineTo(-14, -15); cCtx.lineTo(-4, -7); cCtx.fill();
+                cCtx.beginPath(); cCtx.moveTo(-6, 7); cCtx.lineTo(-14, 15); cCtx.lineTo(-4, 7); cCtx.fill();
+                cCtx.fillStyle = '#0a0e17'; cCtx.beginPath(); cCtx.arc(3, 0, 4, 0, 2*Math.PI); cCtx.fill();
+                cCtx.restore();
+            } else {
+                cCtx.save(); cCtx.translate(endX, endY);
+                let gradExpl = cCtx.createRadialGradient(0,0,2, 0,0,35);
+                gradExpl.addColorStop(0, '#fff'); gradExpl.addColorStop(0.2, '#ffea00'); gradExpl.addColorStop(0.5, '#ff3d00'); gradExpl.addColorStop(1, 'rgba(0,0,0,0)');
+                cCtx.fillStyle = gradExpl; cCtx.beginPath(); cCtx.arc(0,0,40, 0, 2*Math.PI); cCtx.fill();
+                cCtx.restore();
+            }
         }
-        ctx.stroke();
-        ctx.shadowBlur = 0;
     }
 
-    function startGame() {
-        currentBet = parseInt(betInput.value);
-        if (isNaN(currentBet) || currentBet <= 0 || balance < currentBet) {
-            alert("Проверьте ставку и баланс!");
-            return;
+    function varColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+    function generateCrashPoint() {
+        let e = Math.random();
+        if (e < 0.03) return 1.00;
+        let result = 1.01 + (0.97 / (Math.random() + 0.001)) * 0.05;
+        return parseFloat(Math.min(200, Math.max(1.01, result)).toFixed(2));
+    }
+    function handleCrashAction() {
+        if(!cIsPlaying) {
+            cCurrentBet = parseInt(cBetInput.value);
+            if(isNaN(cCurrentBet) || cCurrentBet <= 0 || balance < cCurrentBet) return;
+            setBalance(balance - cCurrentBet);
+            cIsPlaying = true; cHasCashout = false; cMult = 1.00; cTime = 0;
+            cBetInput.disabled = true; cBtn.textContent = "ЗАБРАТЬ"; cBtn.classList.add('danger');
+            cDisplay.style.color = '#fff';
+            
+            cCrashPoint = generateCrashPoint();
+            generateFakePlayers();
+
+            cLoop = setInterval(() => {
+                cTime += 0.5;
+                if (cMult < 2) cMult += 0.01;
+                else if (cMult < 5) cMult += 0.03;
+                else if (cMult < 20) cMult += 0.12;
+                else cMult += 0.45;
+
+                cDisplay.textContent = cMult.toFixed(2) + 'x';
+                drawCrashScene();
+                updateFakePlayers(cMult);
+
+                if(cMult >= cCrashPoint) {
+                    clearInterval(cLoop);
+                    cIsPlaying = false;
+                    cDisplay.textContent = 'CRASH @ ' + cCrashPoint.toFixed(2) + 'x';
+                    cDisplay.style.color = varColor('--accent-red');
+                    drawCrashScene();
+                    addCrashHistory(cCrashPoint.toFixed(2) + 'x');
+                    setTimeout(resetCrashGame, 2500);
+                }
+            }, 40);
+        } else {
+            if(cHasCashout) return;
+            cHasCashout = true;
+            let win = Math.floor(cCurrentBet * cMult);
+            setBalance(balance + win);
+            cBtn.textContent = `Выигрыш +${win} 🌟`; cBtn.disabled = true;
+            cDisplay.style.color = varColor('--accent-green');
         }
-
-        isPlaying = true;
-        hasCashout = false;
-        multiplier = 1.00;
-        trajectoryLog = [];
-        
-        balance -= currentBet;
-        balanceEl.textContent = balance;
-        betInput.disabled = true;
-
-        crashPoint = parseFloat((1.10 + Math.random() * 3.4).toFixed(2));
-        
-        actionBtn.textContent = "ЗАБРАТЬ";
-        actionBtn.classList.add('cashout');
-        multiplierEl.style.color = "#58a6ff";
-        
-        rocketEl.textContent = "🚀";
-        rocketEl.style.display = "block";
-        
-        let startX = 20;
-        let startY = canvas.height - 50;
-        rocketEl.style.left = startX + "px";
-        rocketEl.style.top = startY + "px";
-        rocketEl.style.transform = "rotate(45deg)";
-        trajectoryLog.push({x: startX + 20, y: startY + 20});
-
-        gameInterval = setInterval(() => {
-            multiplier += 0.01;
-            multiplierEl.textContent = multiplier.toFixed(2) + "x";
-
-            let progress = (multiplier - 1);
-            let currentX = startX + progress * 80;
-            let currentY = startY - Math.pow(progress * 10, 1.4) * 4;
-
-            if (currentX > canvas.width - 50) currentX = canvas.width - 50;
-            if (currentY < 40) currentY = 40;
-
-            rocketEl.style.left = currentX + "px";
-            rocketEl.style.top = currentY + "px";
-
-            trajectoryLog.push({x: currentX + 20, y: currentY + 20});
-            drawChart();
-
-            if (multiplier >= crashPoint) { endGame(); }
-        }, 60);
     }
 
-    function cashOut() {
-        if (!isPlaying || hasCashout) return;
-        hasCashout = true;
-        
-        // Звезды теперь рассчитываются честно: вся сумма ставки умножается на Х
-        let winAmount = Math.floor(currentBet * multiplier);
-        balance += winAmount;
-        balanceEl.textContent = balance;
-        
-        multiplierEl.style.color = "#238636";
-        actionBtn.textContent = `Выиграно: ${winAmount} 🌟`;
-        actionBtn.disabled = true;
+    function resetCrashGame() {
+        cBtn.disabled = false; cBtn.textContent = "ВЗЛЕТЕТЬ"; cBtn.classList.remove('danger');
+        cBetInput.disabled = false; cDisplay.textContent = '1.00x'; cDisplay.style.color = '#fff';
+        cMult = 1.00; drawCrashScene();
+        document.getElementById('crash-players-list').innerHTML = '';
     }
 
-    function endGame() {
-        clearInterval(gameInterval);
-        isPlaying = false;
-        betInput.disabled = false;
+    function addCrashHistory(txt) {
+        let hLine = document.getElementById('crash-history');
+        let item = document.createElement('div');
+        let num = parseFloat(txt);
+        item.className = 'history-item';
+        if (num >= 10.0) item.className += ' high';
+        else if (num >= 2.0) item.className += ' medium';
+        item.textContent = txt;
+        hLine.insertBefore(item, hLine.firstChild);
+        if(hLine.children.length > 5) hLine.lastChild.remove();
+    }
 
-        if (!hasCashout) {
-            rocketEl.textContent = "💥";
-            rocketEl.style.transform = "scale(1.5)";
-            multiplierEl.style.color = "#da3633";
-            multiplierEl.textContent = "CRASH!";
+    let fakePlayers = [];
+    const botNames = ["Данил", "Артур", "Маша", "Shark_77", "Guru_Stars", "Kamil_Fan", "Vitek", "Юля", "Nikitka"];
+    function generateFakePlayers() {
+        fakePlayers = [];
+        let num = 3 + Math.floor(Math.random()*4);
+        let listEl = document.getElementById('crash-players-list');
+        listEl.innerHTML = '';
+        for(let i=0; i<num; i++) {
+            let name = botNames[Math.floor(Math.random()*botNames.length)];
+            let bet = 5 + Math.floor(Math.random()*150);
+            let cashoutX = parseFloat((1.1 + Math.random()*4).toFixed(2));
+            if(Math.random() < 0.1) cashoutX = parseFloat((10 + Math.random()*30).toFixed(2));
+            fakePlayers.push({name: name, bet: bet, x: cashoutX, active: true});
+            listEl.innerHTML += `<div class="bet-row" id="bot-${i}"><span class="bet-user">${name}</span><span class="bet-mult waiting" id="bot-x-${i}">В полете...</span><span class="bet-value">${bet} <div class="star-icon"></div></span></div>`;
         }
-
-        setTimeout(() => {
-            actionBtn.textContent = "ВЗЛЕТЕТЬ";
-            actionBtn.classList.remove('crashout');
-            actionBtn.disabled = false;
-            multiplierEl.style.color = "#58a6ff";
-            multiplierEl.textContent = "1.00x";
-            rocketEl.style.display = "none";
-            rocketEl.style.transform = "rotate(45deg) scale(1)";
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }, 2500);
+    }
+    function updateFakePlayers(currentX) {
+        fakePlayers.forEach((p, idx) => {
+            if(p.active && currentX >= p.x) {
+                p.active = false;
+                let elX = document.getElementById(`bot-x-${idx}`);
+                if(elX && p.x <= cCrashPoint) { elX.className = "bet-mult"; elX.textContent = p.x.toFixed(2) + 'x'; }
+            } else if (p.active && currentX >= cCrashPoint) {
+                p.active = false;
+                let elX = document.getElementById(`bot-x-${idx}`);
+                if(elX) { elX.style.color = varColor('--accent-red'); elX.textContent = 'Взрыв'; }
+            }
+        });
     }
 
-    actionBtn.addEventListener('click', () => { if (!isPlaying) { startGame(); } else { cashOut(); } });
-    window.addEventListener('resize', resizeCanvas);
+    let mBoard = [], mBombs = [], mIsPlaying = false, mBet = 0, mGemsFound = 0, mTotalBombs = 5;
+    const mBoardEl = document.getElementById('mines-board');
+    const mStatusEl = document.getElementById('mines-status');
+    const mBtn = document.getElementById('mines-btn');
+    const mBetInput = document.getElementById('mines-bet');
+    const mCountSelect = document.getElementById('mines-count');
+
+    function buildMinesBoard() {
+        mBoardEl.innerHTML = '';
+        for(let i=0; i<25; i++) {
+            let tile = document.createElement('div');
+            tile.className = 'mine-tile'; tile.textContent = '🌟';
+            tile.setAttribute('data-id', i);
+            tile.addEventListener('click', () => clickTile(i));
+            mBoardEl.appendChild(tile);
+        }
+    }
+    buildMinesBoard();
+
+    function getMinesMultiplier() {
+        if(mGemsFound === 0) return 1.00;
+        let n = 25, k = mTotalBombs;
+        let mult = 1;
+        for(let i=0; i<mGemsFound; i++) { mult *= (n - i) / (n - k - i); }
+        return parseFloat(mult.toFixed(2));
+    }
+
+    function handleMinesAction() {
+        if(!mIsPlaying) {
+            mBet = parseInt(mBetInput.value);
+            mTotalBombs = parseInt(mCountSelect.value);
+            if(isNaN(mBet) || mBet <= 0 || balance < mBet) return;
+
+            setBalance(balance - mBet);
+            mIsPlaying = true; mGemsFound = 0;
+            mBetInput.disabled = true; mCountSelect.disabled = true;
+            mStatusEl.textContent = `Текущий Х: 1.00x`; mStatusEl.style.color = '#fff';
+            mBtn.textContent = 'ЗАБРАТЬ (1.00x)'; mBtn.className = 'main-btn danger';
+
+            mBombs = Array(25).fill(false);
+            let deployed = 0;
+            while(deployed < mTotalBombs) {
+                let r = Math.floor(Math.random()*25);
+                if(!mBombs[r]) { mBombs[r] = true; deployed++; }
+            }
+            buildMinesBoard();
+            document.querySelectorAll('.mine-tile').forEach(t => t.style.color = '#4e5d78');
+        } else {
+            let curMult = getMinesMultiplier();
+            let win = Math.floor(mBet * curMult);
+            setBalance(balance + win);
+            mStatusEl.textContent = `🎉 Забрал +${win} 🌟`; mStatusEl.style.color = varColor('--accent-green');
+            revealBoard(true);
+            endMinesGame();
+        }
+    }
+
+    function clickTile(id) {
+        if(!mIsPlaying) return;
+        let tiles = document.querySelectorAll('.mine-tile');
+        let t = tiles[id];
+        if(t.classList.contains('open-gem') || t.classList.contains('open-bomb')) return;
+
+        if(mBombs[id]) {
+            t.classList.add('open-bomb'); t.textContent = '💥';
+            mStatusEl.textContent = '💥 КРАШ! Вы попали на мину!'; mStatusEl.style.color = varColor('--accent-red');
+            revealBoard(false);
+            endMinesGame();
+        } else {
+            t.classList.add('open-gem'); t.textContent = '💎';
+            mGemsFound++;
+            let curMult = getMinesMultiplier();
+            mStatusEl.textContent = `Текущий Х: ${curMult}x`;
+            mBtn.textContent = `ЗАБРАТЬ (${Math.floor(mBet * curMult)} 🌟)`;
+
+            if(mGemsFound === (25 - mTotalBombs)) {
+                let win = Math.floor(mBet * curMult);
+                setBalance(balance + win);
+                mStatusEl.textContent = `👑 ИДЕАЛЬНО! Выигрыш +${win} 🌟`; mStatusEl.style.color = varColor('--accent-green');
+                revealBoard(true);
+                endMinesGame();
+            }
+        }
+    }
+
+    function revealBoard(won) {
+        let tiles = document.querySelectorAll('.mine-tile');
+        for(let i=0; i<25; i++) {
+            if(mBombs[i]) {
+                if(!tiles[i].classList.contains('open-bomb')) { tiles[i].classList.add('open-bomb'); tiles[i].textContent = '💣'; }
+            } else {
+                if(!tiles[i].classList.contains('open-gem')) { tiles[i].style.color = '#25334a'; tiles[i].textContent = '💎'; }
+            }
+        }
+    }
+
+    function endMinesGame() {
+        mIsPlaying = false; mBetInput.disabled = false; mCountSelect.disabled = false;
+        mBtn.className = 'main-btn'; mBtn.textContent = 'НАЧАТЬ ИГРУ';
+    }
 </script>
 </body>
 </html>
