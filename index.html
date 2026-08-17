@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ GALAXY STARS MULTIPLAYER ⚡</title>
+    <title>⚡ GALAXY GIFT ⚡</title>
     <script src="https://telegram.org"></script>
     <style>
         :root {
-            --bg-main: #060913;
-            --bg-card: #0f1524;
-            --bg-input: #172033;
-            --tg-star: #fbc02d;
+            --bg-main: #05070f;
+            --bg-card: #0b111e;
+            --bg-input: #121b2d;
+            --tg-star: #ffca28;
             --accent-blue: #00f0ff;
-            --accent-purple: #cc00ff;
-            --accent-gold: #ffaa00;
+            --accent-purple: #b300ff;
+            --accent-gold: #ff9100;
             --accent-green: #00ff66;
             --accent-red: #ff0055;
         }
@@ -26,47 +26,50 @@
         #app-container { width: 100%; max-width: 440px; display: flex; flex-direction: column; padding-bottom: 20px; }
         header {
             display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;
-            background: var(--bg-card); border-bottom: 1px solid #1d273d; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            background: var(--bg-card); border-bottom: 1px solid #172237; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-        .logo { font-weight: 900; font-size: 1.1rem; color: var(--accent-blue); letter-spacing: 0.5px; }
+        .logo { font-weight: 900; font-size: 1.15rem; color: var(--accent-blue); letter-spacing: 0.5px; animation: pulseGlow 2s infinite alternate; }
+        @keyframes pulseGlow { from { text-shadow: 0 0 5px var(--accent-blue); } to { text-shadow: 0 0 15px var(--accent-blue); } }
         .balance-box {
             display: flex; align-items: center; gap: 6px; background: var(--bg-input);
-            padding: 6px 14px; border-radius: 20px; font-weight: bold; border: 1px solid rgba(251, 192, 45, 0.2);
+            padding: 6px 14px; border-radius: 20px; font-weight: bold; border: 1px solid rgba(255, 202, 40, 0.2);
         }
         .star-icon {
             width: 16px; height: 16px; background: var(--tg-star);
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             box-shadow: 0 0 10px var(--tg-star);
         }
-        nav { display: flex; gap: 8px; padding: 12px 16px; }
+        nav { display: flex; gap: 6px; padding: 12px 16px; }
         .nav-btn {
-            flex: 1; padding: 10px; border: none; border-radius: 10px; background: var(--bg-card);
-            color: #7e8b9b; font-weight: bold; font-size: 0.9rem; cursor: pointer; border: 1px solid transparent;
+            flex: 1; padding: 10px 4px; border: none; border-radius: 10px; background: var(--bg-card);
+            color: #728299; font-weight: bold; font-size: 0.82rem; cursor: pointer; border: 1px solid transparent; transition: 0.15s;
         }
         .nav-btn.active { background: rgba(0, 240, 255, 0.08); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
         .game-screen { display: none; padding: 0 16px; }
         .game-screen.active { display: block; }
+        
         .history-line { display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; padding: 2px 0; scrollbar-width: none; }
-        .history-item { background: #141d30; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--accent-blue); }
+        .history-item { background: #121b2d; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--accent-blue); }
         .history-item.medium { color: var(--accent-purple); }
         .history-item.high { color: var(--accent-gold); text-shadow: 0 0 6px var(--accent-gold); }
-        .crash-viewport { height: 210px; background: #03050a; border-radius: 14px; position: relative; overflow: hidden; border: 1px solid #141d30; }
+        
+        .crash-viewport { height: 210px; background: #020408; border-radius: 14px; position: relative; overflow: hidden; border: 1px solid #172237; }
         #crash-canvas { width: 100%; height: 100%; display: block; }
         #crash-mult-display {
             position: absolute; top: 25px; width: 100%; text-align: center; font-size: 3.2rem;
-            font-weight: 900; color: #fff; z-index: 5; text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+            font-weight: 900; color: #fff; z-index: 5; text-shadow: 0 4px 12px rgba(0,0,0,0.8);
         }
         #crash-timer-display {
             position: absolute; top: 85px; width: 100%; text-align: center; font-size: 1.1rem;
             font-weight: bold; color: var(--accent-gold); z-index: 5; display: none;
         }
-        .controls-card { background: var(--bg-card); padding: 14px; border-radius: 14px; margin-top: 12px; border: 1px solid #141d30; }
+        .controls-card { background: var(--bg-card); padding: 14px; border-radius: 14px; margin-top: 12px; border: 1px solid #172237; }
         .row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
         .flex-1 { flex: 1; }
-        .label { font-size: 0.8rem; color: #7e8b9b; margin-bottom: 4px; text-align: left; }
+        .label { font-size: 0.8rem; color: #728299; margin-bottom: 4px; text-align: left; }
         input, select {
             width: 100%; box-sizing: border-box; padding: 10px; background: var(--bg-input);
-            border: 1px solid #1d273d; border-radius: 8px; color: #fff; font-size: 0.95rem; font-weight: bold;
+            border: 1px solid #1c2a42; border-radius: 8px; color: #fff; font-size: 0.95rem; font-weight: bold;
         }
         .main-btn {
             width: 100%; padding: 14px; border: none; border-radius: 10px; background: var(--accent-green);
@@ -74,42 +77,54 @@
         }
         .main-btn.danger { background: var(--accent-red); color: #fff; box-shadow: 0 4px 12px rgba(255, 0, 85, 0.2); }
         .main-btn.waiting { background: var(--bg-input); color: var(--accent-gold); box-shadow: none; border: 1px solid var(--accent-gold); }
-        .main-btn:disabled { background: #141d30; color: #4e5d78; box-shadow: none; cursor: not-allowed; }
-        .live-bets { margin-top: 15px; background: var(--bg-card); border-radius: 14px; padding: 12px; border: 1px solid #141d30; }
-        .live-title { font-size: 0.8rem; font-weight: bold; color: #7e8b9b; text-align: left; margin-bottom: 8px; display: flex; justify-content: space-between;}
-        .bet-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; border-bottom: 1px solid #141d30; font-size: 0.85rem; }
-        .bet-row.my-bet-row { background: rgba(0, 240, 255, 0.05); border-left: 3px solid var(--accent-blue); padding-left: 6px; }
-        .bet-row.won-row { background: rgba(0, 255, 102, 0.03); }
+        .main-btn:disabled { background: #121b2d; color: #3d4b5f; box-shadow: none; cursor: not-allowed; }
+        
+        .live-bets { margin-top: 15px; background: var(--bg-card); border-radius: 14px; padding: 12px; border: 1px solid #172237; }
+        .live-title { font-size: 0.8rem; font-weight: bold; color: #728299; text-align: left; margin-bottom: 8px; display: flex; justify-content: space-between;}
+        .bet-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; border-bottom: 1px solid #121b2d; font-size: 0.85rem; }
+        .bet-row.my-bet-row { background: rgba(0, 240, 255, 0.04); border-left: 3px solid var(--accent-blue); padding-left: 6px; }
+        .bet-row.won-row { background: rgba(0, 255, 102, 0.02); }
         .bet-user { font-weight: 600; color: #dbdfeb; display: flex; align-items: center; gap: 6px; }
         .bet-value { display: flex; align-items: center; gap: 4px; font-weight: bold; min-width: 70px; justify-content: flex-end; }
         .bet-mult { color: var(--accent-green); font-weight: bold; background: rgba(0,255,102,0.1); padding: 2px 6px; border-radius: 4px; min-width: 50px; text-align: center;}
-        .bet-mult.waiting { color: #7e8b9b; background: var(--bg-input); }
+        .bet-mult.waiting { color: #728299; background: var(--bg-input); }
         .bet-mult.crushed { color: var(--accent-red); background: rgba(255,0,85,0.08); }
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 12px 0; background: #03050a; padding: 10px; border-radius: 14px; }
-        .mine-tile { aspect-ratio: 1; background: var(--bg-card); border-radius: 8px; border: 1px solid #1d273d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        .mine-tile.open-gem { background: rgba(0, 255, 102, 0.1); border-color: var(--accent-green); color: var(--accent-green); }
-        .mine-tile.open-bomb { background: rgba(255, 0, 85, 0.1); border-color: var(--accent-red); color: var(--accent-red); }
+        
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 12px 0; background: #020408; padding: 10px; border-radius: 14px; }
+        .mine-tile { aspect-ratio: 1; background: var(--bg-card); border-radius: 8px; border: 1px solid #172237; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .mine-tile.open-gem { background: rgba(0, 255, 102, 0.08); border-color: var(--accent-green); color: var(--accent-green); }
+        .mine-tile.open-bomb { background: rgba(255, 0, 85, 0.08); border-color: var(--accent-red); color: var(--accent-red); }
+        
+        .leader-board { background: var(--bg-card); border-radius: 14px; padding: 12px; border: 1px solid #172237; margin-top: 5px; }
+        .leader-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 6px; border-bottom: 1px solid #121b2d; }
+        .leader-row:last-child { border-bottom: none; }
+        .leader-row.me { background: rgba(0, 240, 255, 0.04); border-radius: 8px; }
+        .leader-rank { font-weight: bold; width: 25px; color: var(--accent-blue); }
+        .leader-name { flex: 1; text-align: left; font-weight: 600; }
+        .leader-val { display: flex; align-items: center; gap: 4px; font-weight: bold; color: var(--tg-star); }
     </style>
 </head>
 <body>
 <div id="app-container">
     <header>
-        <div class="logo">⚡ GALAXY MULTIPLAYER</div>
+        <div class="logo">⚡ GALAXY GIFT ⚡</div>
         <div class="balance-box"><span id="global-balance">1000</span><div class="star-icon"></div></div>
     </header>
     <nav>
         <button id="tab-crash" class="nav-btn active" onclick="switchTab('crash')">🚀 CRASH LIVE</button>
         <button id="tab-mines" class="nav-btn" onclick="switchTab('mines')">💣 MINES</button>
+        <button id="tab-leaders" class="nav-btn" onclick="switchTab('leaders')">🏆 LEADERS</button>
     </nav>
+    <!-- ЭКРАН КРАША -->
     <div id="screen-crash" class="game-screen active">
         <div class="history-line" id="crash-history">
-            <div class="history-item">1.45x</div>
+            <div class="history-item">1.35x</div>
             <div class="history-item medium">2.10x</div>
-            <div class="history-item high">14.80x</div>
+            <div class="history-item high">12.40x</div>
         </div>
         <div class="crash-viewport">
             <div id="crash-mult-display">1.00x</div>
-            <div id="crash-timer-display">До взлета: 5.0с</div>
+            <div id="crash-timer-display">Взлет через: 5.0с</div>
             <canvas id="crash-canvas"></canvas>
         </div>
         <div class="controls-card">
@@ -121,6 +136,8 @@
             <div id="crash-players-list"></div>
         </div>
     </div>
+
+    <!-- ЭКРАН МИН -->
     <div id="screen-mines" class="game-screen">
         <div class="controls-card" style="margin-top:0; margin-bottom:12px;">
             <div style="font-size:1rem; font-weight:bold; color:var(--accent-blue); text-align:left;" id="mines-status">Настройте мины и ставку</div>
@@ -147,12 +164,43 @@
             <button id="mines-btn" class="main-btn" onclick="handleMinesAction()">НАЧАТЬ ИГРУ</button>
         </div>
     </div>
+
+    <!-- ЭКРАН ЛИДЕРОВ -->
+    <div id="screen-leaders" class="game-screen">
+        <div class="leader-board" id="leaders-list">
+            <!-- Сюда скрипт вставит ТОП-игроков -->
+        </div>
+    </div>
 </div>
 
 <script>
+    // СИСТЕМА УМНОГО СОХРАНЕНИЯ БАЛАНСА КАЗИНО
     let balance = 1000;
+    
+    // Загружаем сохраненный баланс
+    if (localStorage.getItem('galaxy_gift_balance')) {
+        let savedBalance = parseInt(localStorage.getItem('galaxy_gift_balance'));
+        // Защита: сбрасываем на 1000, если игрок ушел в минус или слил ниже тысячи
+        if (savedBalance >= 1000) {
+            balance = savedBalance;
+        } else {
+            localStorage.setItem('galaxy_gift_balance', 1000);
+        }
+    }
+
     const bEl = document.getElementById('global-balance');
-    function setBalance(v) { balance = v; bEl.textContent = balance; }
+    
+    function setBalance(v) { 
+        balance = v; 
+        bEl.textContent = balance; 
+        // Если баланс больше или равен 1000 — сохраняем, иначе — сбрасываем кэш
+        if (balance >= 1000) {
+            localStorage.setItem('galaxy_gift_balance', balance);
+        } else {
+            localStorage.removeItem('galaxy_gift_balance');
+        }
+        updateLeaders();
+    }
 
     function switchTab(tab) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -160,11 +208,8 @@
         document.getElementById('tab-' + tab).classList.add('active');
         document.getElementById('screen-' + tab).classList.add('active');
         if(tab === 'crash') resizeCrashCanvas();
+        if(tab === 'leaders') updateLeaders();
     }
-
-    /* ========================================================
-       ГРАФИЧЕСКИЙ ДВИЖОК КРАША С НОВОЙ КИБЕРПАНК-РАКЕТОЙ
-       ======================================================== */
     const cCanvas = document.getElementById('crash-canvas');
     const cCtx = cCanvas.getContext('2d');
     const cDisplay = document.getElementById('crash-mult-display');
@@ -172,7 +217,7 @@
     const cBtn = document.getElementById('crash-btn');
     const cBetInput = document.getElementById('crash-bet');
 
-    let cGameState = "LOBBY"; // LOBBY, FLYING, CRASHED
+    let cGameState = "LOBBY"; 
     let cMult = 1.00, cCrashPoint = 0, cTime = 0, cMainLoop = null;
     let myBetActive = false, myBetAmount = 0, myCashoutX = 0, hasCashoutThisRound = false;
 
@@ -187,13 +232,11 @@
         cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
         let w = cCanvas.width, h = cCanvas.height;
 
-        // Рисуем сетку на заднем фоне
-        cCtx.strokeStyle = '#0d1322'; cCtx.lineWidth = 1;
+        cCtx.strokeStyle = '#0a0d14'; cCtx.lineWidth = 1;
         for(let i=0; i<w; i+=40) { cCtx.beginPath(); cCtx.moveTo(i,0); cCtx.lineTo(i,h); cCtx.stroke(); }
         for(let j=0; j<h; j+=40) { cCtx.beginPath(); cCtx.moveTo(0,j); cCtx.lineTo(w,j); cCtx.stroke(); }
 
         if (cGameState === "FLYING" || cGameState === "CRASHED") {
-            // Динамический зум: ракета летит бесконечно, график сжимается
             let zoomX = 1 + (cMult - 1) * 0.45;
             let zoomY = 1 + Math.pow(cMult - 1, 1.15) * 0.35;
 
@@ -204,7 +247,6 @@
             if (endX > w - 45) endX = w - 45;
             if (endY < 45) endY = 45;
 
-            // Отрисовка неонового графика
             cCtx.beginPath();
             cCtx.strokeStyle = varColor('--accent-blue'); cCtx.lineWidth = 4;
             cCtx.shadowBlur = 15; cCtx.shadowColor = varColor('--accent-blue');
@@ -214,40 +256,41 @@
             cCtx.shadowBlur = 0;
 
             if (cGameState === "FLYING") {
-                // ОТРИСОВКА НОВОЙ КИБЕРПАНК-РАКЕТЫ
                 cCtx.save();
                 cCtx.translate(endX, endY);
-                cCtx.rotate(-Math.PI / 4 + (Math.sin(cTime * 0.25) * 0.03)); // Легкая качка
+                cCtx.rotate(-Math.PI / 4 + (Math.sin(cTime * 0.25) * 0.03));
 
-                // Реактивный огонь
-                let flameSize = 14 + Math.random() * 16;
+                let blink = (Math.sin(cTime * 0.4) + 1) / 2;
+
+                // Пламя из твоего нового киберпанк-движка
+                let flameSize = 15 + Math.random() * 15;
                 let flameGrad = cCtx.createLinearGradient(0, 0, -flameSize, 0);
-                flameGrad.addColorStop(0, '#ff9100'); flameGrad.addColorStop(0.5, '#ff3d00'); flameGrad.addColorStop(1, 'rgba(255,0,85,0)');
+                flameGrad.addColorStop(0, '#ff33e1'); flameGrad.addColorStop(0.5, varColor('--accent-blue')); flameGrad.addColorStop(1, 'rgba(0,240,255,0)');
                 cCtx.fillStyle = flameGrad; cCtx.beginPath();
-                cCtx.moveTo(-16, -5); cCtx.lineTo(-16 - flameSize, 0); cCtx.lineTo(-16, 5); cCtx.fill();
+                cCtx.moveTo(-16, -6); cCtx.lineTo(-16 - flameSize, 0); cCtx.lineTo(-16, 6); cCtx.fill();
 
-                // Корпус (титановый градиент)
-                let bodyGrad = cCtx.createLinearGradient(-15, 0, 15, 0);
-                bodyGrad.addColorStop(0, '#bdc3c7'); bodyGrad.addColorStop(1, '#ffffff');
-                cCtx.fillStyle = bodyGrad; cCtx.beginPath(); cCtx.ellipse(0, 0, 22, 9, 0, 0, 2 * Math.PI); cCtx.fill();
+                // Корпус неоновой ракеты
+                cCtx.fillStyle = '#121b2d'; cCtx.strokeStyle = varColor('--accent-blue'); cCtx.lineWidth = 2;
+                cCtx.shadowBlur = 10; cCtx.shadowColor = varColor('--accent-blue');
+                cCtx.beginPath(); cCtx.ellipse(0, 0, 24, 8, 0, 0, 2 * Math.PI); cCtx.fill(); cCtx.stroke();
+                cCtx.shadowBlur = 0;
 
-                // Обтекатель носа (неоново-красный)
-                cCtx.fillStyle = varColor('--accent-red'); cCtx.beginPath(); cCtx.ellipse(15, 0, 7, 9, 0, -Math.PI / 2, Math.PI / 2); cCtx.fill();
+                // Лазерные светящиеся точки из твоего кода (мигающий эффект px)
+                let px = -10 + (cTime % 20);
+                cCtx.fillStyle = `rgba(255,55,225,${0.35 + blink * 0.65})`;
+                cCtx.beginPath(); cCtx.arc(px, -3, 1.5, 0, Math.PI * 2); cCtx.fill();
+                cCtx.beginPath(); cCtx.arc(px - 5, 3, 1.2, 0, Math.PI * 2); cCtx.fill();
 
-                // Космические крылья с подсветкой
-                cCtx.fillStyle = varColor('--accent-blue');
-                cCtx.beginPath(); cCtx.moveTo(-5, -8); cCtx.lineTo(-16, -17); cCtx.lineTo(-3, -8); cCtx.fill();
-                cCtx.beginPath(); cCtx.moveTo(-5, 8); cCtx.lineTo(-16, 17); cCtx.lineTo(-3, 8); cCtx.fill();
+                // Неоновые крылья
+                cCtx.fillStyle = varColor('--accent-purple'); cCtx.beginPath();
+                cCtx.moveTo(-6, -8); cCtx.lineTo(-18, -16); cCtx.lineTo(-4, -8); cCtx.fill();
+                cCtx.beginPath(); cCtx.moveTo(-6, 8); cCtx.lineTo(-18, 16); cCtx.lineTo(-4, 8); cCtx.fill();
 
-                // Иллюминатор кабины пилота
-                cCtx.fillStyle = '#060913'; cCtx.beginPath(); cCtx.arc(4, 0, 4.5, 0, 2 * Math.PI); cCtx.fill();
-                cCtx.strokeStyle = varColor('--accent-blue'); cCtx.lineWidth = 1; cCtx.stroke();
                 cCtx.restore();
             } else {
-                // АНИМАЦИЯ КРАША (ВЗРЫВ)
                 cCtx.save(); cCtx.translate(endX, endY);
                 let expGrad = cCtx.createRadialGradient(0, 0, 2, 0, 0, 40);
-                expGrad.addColorStop(0, '#fff'); expGrad.addColorStop(0.2, '#ffea00'); expGrad.addColorStop(0.6, '#ff0055'); expGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                expGrad.addColorStop(0, '#fff'); expGrad.addColorStop(0.3, varColor('--accent-blue')); expGrad.addColorStop(0.7, varColor('--accent-purple')); expGrad.addColorStop(1, 'rgba(0,0,0,0)');
                 cCtx.fillStyle = expGrad; cCtx.beginPath(); cCtx.arc(0, 0, 45, 0, 2 * Math.PI); cCtx.fill();
                 cCtx.restore();
             }
@@ -258,9 +301,9 @@
 
     function generateCrashPoint() {
         let rand = Math.random();
-        if (rand < 0.04) return 1.00; // Моментальный взрыв (мощный риск)
-        let res = 1.01 + (0.96 / (Math.random() + 0.001)) * 0.06;
-        return parseFloat(Math.min(300, Math.max(1.01, res)).toFixed(2));
+        if (rand < 0.04) return 1.00; // 4% шанс мгновенного взрыва (казино-риск)
+        let res = 1.01 + (0.95 / (Math.random() + 0.001)) * 0.06;
+        return parseFloat(Math.min(250, Math.max(1.01, res)).toFixed(2));
     }
     // АВТОМАТИЧЕСКИЙ ЦИКЛ СЕРВЕРА КРАШ-ИГРЫ
     function runServerTimeline() {
@@ -283,7 +326,7 @@
         cTimerDisplay.style.display = "block";
         cTimerDisplay.textContent = `Взлет через: ${timeLeft.toFixed(1)}с`;
         cDisplay.textContent = "1.00x";
-        cDisplay.style.color = "#7e8b9b";
+        cDisplay.style.color = "#728299";
         
         generateFakePlayers();
         renderPlayersList();
@@ -319,7 +362,7 @@
         cMainLoop = setInterval(() => {
             cTime += 0.5;
             
-            // Динамический разгон коэффициента
+            // Плавный разгон как в Авиаторе
             if (cMult < 2) cMult += 0.01;
             else if (cMult < 5) cMult += 0.03;
             else if (cMult < 20) cMult += 0.15;
@@ -353,6 +396,7 @@
             }
         }, 45);
     }
+
     function handleCrashAction() {
         if (cGameState === "LOBBY") {
             if (myBetActive) {
@@ -393,17 +437,17 @@
         if (hLine.children.length > 5) hLine.lastChild.remove();
     }
 
+    // МУЛЬТИПЛЕЕР С МАЛЫМ КОЛИЧЕСТВОМ БОТОВ (Всего 2 бота)
     let fakePlayers = [];
-    const botNames = ["Данил", "Артур", "Маша_VIP", "Shark_77", "Guru_Stars", "Kamil_Fan", "Vitek", "Юля_05", "Nikitka", "MinesKing", "CryptoFly"];
+    const botNames = ["Данил", "Артур_VIP", "Маша", "Shark_77", "CryptoFly"];
     
     function generateFakePlayers() {
         fakePlayers = [];
-        let num = 4 + Math.floor(Math.random() * 4);
+        let num = 2; // Сделали меньше ботов по твоей просьбе
         for (let i = 0; i < num; i++) {
             let name = botNames[Math.floor(Math.random() * botNames.length)];
-            let bet = 5 + Math.floor(Math.random() * 200);
-            let targetX = parseFloat((1.1 + Math.random() * 4.5).toFixed(2));
-            if (Math.random() < 0.08) targetX = parseFloat((10 + Math.random() * 40).toFixed(2));
+            let bet = 10 + Math.floor(Math.random() * 90);
+            let targetX = parseFloat((1.15 + Math.random() * 3.5).toFixed(2));
             fakePlayers.push({ name: name, bet: bet, x: targetX, active: true, state: "FLYING" });
         }
     }
@@ -422,10 +466,11 @@
         let listEl = document.getElementById('crash-players-list');
         listEl.innerHTML = '';
 
+        // ТВОЯ СТАВКА НА 1 МЕСТЕ В ТАБЛИЦЕ ЛАЙВ
         if (myBetActive) {
             let multText = "В полете...";
             let rowClass = "bet-row my-bet-row";
-            let displayVal = Math.floor(myBetAmount * cMult);
+            let displayVal = Math.floor(myBetAmount * cMult); // Растет каждую секунду на лету!
 
             if (hasCashoutThisRound) {
                 multText = myCashoutX.toFixed(2) + 'x';
@@ -460,7 +505,7 @@
 
     runServerTimeline();
     /* ========================================================
-       ЛОГИКА СИСТЕМЫ ИГРЫ МИНЫ (5х5)
+       ЛОГИКА СИСТЕМЫ ИГРЫ МИНЫ (5х5) И АНТИ-ДИСБАЛАНСА
        ======================================================== */
     let mBoard = [], mBombs = [], mIsPlaying = false, mBet = 0, mGemsFound = 0, mTotalBombs = 5;
     const mBoardEl = document.getElementById('mines-board');
@@ -485,6 +530,7 @@
         if(mGemsFound === 0) return 1.00;
         let n = 25, k = mTotalBombs;
         let mult = 1;
+        // Математически выверенная формула без дисбаланса
         for(let i=0; i<mGemsFound; i++) { mult *= (n - i) / (n - k - i); }
         return parseFloat(mult.toFixed(2));
     }
@@ -508,7 +554,7 @@
                 if(!mBombs[r]) { mBombs[r] = true; deployed++; }
             }
             buildMinesBoard();
-            document.querySelectorAll('.mine-tile').forEach(t => t.style.color = '#4e5d78');
+            document.querySelectorAll('.mine-tile').forEach(t => t.style.color = '#313f56');
         } else {
             let curMult = getMinesMultiplier();
             let win = Math.floor(mBet * curMult);
@@ -553,7 +599,7 @@
             if(mBombs[i]) {
                 if(!tiles[i].classList.contains('open-bomb')) { tiles[i].classList.add('open-bomb'); tiles[i].textContent = '💣'; }
             } else {
-                if(!tiles[i].classList.contains('open-gem')) { tiles[i].style.color = '#25334a'; tiles[i].textContent = '💎'; }
+                if(!tiles[i].classList.contains('open-gem')) { tiles[i].style.color = '#172237'; tiles[i].textContent = '💎'; }
             }
         }
     }
@@ -562,6 +608,43 @@
         mIsPlaying = false; mBetInput.disabled = false; mCountSelect.disabled = false;
         mBtn.className = 'main-btn'; mBtn.textContent = 'НАЧАТЬ ИГРУ';
     }
+
+    /* ========================================================
+       СИСТЕМА ТАБЛИЦЫ ЛИДЕРОВ (LEADERS)
+       ======================================================== */
+    const staticLeaders = [
+        { name: "Shark_77", balance: 25000 },
+        { name: "Маша_VIP", balance: 12400 },
+        { name: "Данил", balance: 5300 },
+        { name: "CryptoFly", balance: 3100 },
+        { name: "Nikitka", balance: 750 }
+    ];
+
+    function updateLeaders() {
+        let listEl = document.getElementById('leaders-list');
+        if (!listEl) return;
+        
+        let allLeaders = [...staticLeaders, { name: "Ты (Камиль)", balance: balance, isMe: true }];
+        
+        // Сортировка по богатству
+        allLeaders.sort((a, b) => b.balance - a.balance);
+        
+        listEl.innerHTML = '<div style="font-size:1.1rem; font-weight:bold; color:var(--accent-blue); margin-bottom:15px; text-align:left;">🏆 Топ игроков Galaxy Gift</div>';
+        
+        allLeaders.forEach((player, index) => {
+            let rowClass = player.isMe ? "leader-row me" : "leader-row";
+            let rankText = (index + 1) === 1 ? "👑" : (index + 1);
+            
+            listEl.innerHTML += `
+                <div class="${rowClass}">
+                    <span class="leader-rank">${rankText}</span>
+                    <span class="leader-name" style="${player.isMe ? 'color:var(--accent-blue);font-weight:bold;' : ''}">${player.name}</span>
+                    <span class="leader-val">${player.balance} <div class="star-icon"></div></span>
+                </div>
+            `;
+        });
+    }
+    updateLeaders();
 </script>
 </body>
 </html>
